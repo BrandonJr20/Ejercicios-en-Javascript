@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Juego de Memoria</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+
+        .tablero {
+            display: grid;
+            grid-template-columns: repeat(4, 150px);
+            grid-template-rows: repeat(4, 150px);
+            gap: 10px;
+        }
+
+        .carta {
+            width: 150px;
+            height: 150px;
+            background-color: #3498db;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 3rem;
+            color: white;
+            cursor: pointer;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            position: relative;
+            perspective: 1000px;
+        }
+
+        .carta.volteada {
+            transform: rotateY(180deg);
+        }
+
+        .carta .frontal,
+        .carta .trasera {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2rem;
+            border-radius: 10px;
+        }
+
+        .carta .frontal {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .carta .trasera {
+            background-color: #2ecc71;
+            transform: rotateY(180deg);
+        }
+
+        .contador {
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+
+        .boton-reiniciar {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 1rem;
+            cursor: pointer;
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+
+        .boton-reiniciar:hover {
+            background-color: #c0392b;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="contador">
+        Tiempo: <span id="tiempo">0</span>s | Intentos: <span id="intentos">0</span>
+    </div>
+
+    <div class="tablero" id="tablero">
+        <!-- Las cartas se generarán dinámicamente -->
+    </div>
+
+    <button class="boton-reiniciar" id="reiniciar">Reiniciar Juego</button>
+
+    <script>
+        const tablero = document.getElementById('tablero');
+        const tiempoSpan = document.getElementById('tiempo');
+        const intentosSpan = document.getElementById('intentos');
+        const reiniciarBtn = document.getElementById('reiniciar');
+        const cartasValores = ['🍎', '🍌', '🍒', '🍇', '🍉', '🍍', '🍑', '🥭', '🍎', '🍌', '🍒', '🍇', '🍉', '🍍', '🍑', '🥭'];
+        let cartasVolteadas = [];
+        let cartasBloqueadas = false;
+        let intentos = 0;
+        let parejasEncontradas = 0;
+        let tiempo = 0;
+        let temporizador;
+
+        // Función para iniciar el temporizador
+        function iniciarTemporizador() {
+            temporizador = setInterval(() => {
+                tiempo++;
+                tiempoSpan.textContent = tiempo;
+            }, 1000);
+        }
+
+        // Función para detener el temporizador
+        function detenerTemporizador() {
+            clearInterval(temporizador);
+        }
+
+        // Función para generar las cartas en el tablero
+        function crearCartas() {
+            // Limpiar el tablero antes de crear las cartas
+            tablero.innerHTML = '';
+            const cartasMezcladas = cartasValores.sort(() => 0.5 - Math.random());
+
+            cartasMezcladas.forEach(valor => {
+                const carta = document.createElement('div');
+                carta.classList.add('carta');
+                carta.innerHTML = `
+                    <div class="frontal"></div>
+                    <div class="trasera">${valor}</div>
+                `;
+                carta.addEventListener('click', () => voltearCarta(carta));
+                tablero.appendChild(carta);
+            });
+
+            iniciarTemporizador(); // Iniciar el temporizador al crear las cartas
+        }
+
+        // Función para voltear una carta
+        function voltearCarta(carta) {
+            if (cartasBloqueadas || carta.classList.contains('volteada')) return;
+
+            carta.classList.add('volteada');
+            cartasVolteadas.push(carta);
+
+            if (cartasVolteadas.length === 2) {
+                intentos++;
+                intentosSpan.textContent = intentos; // Actualizar el contador de intentos
+                verificarPareja();
+            }
+        }
+
+        // Verificar si las dos cartas volteadas son iguales
+        function verificarPareja() {
+            const [carta1, carta2] = cartasVolteadas;
+
+            if (carta1.innerHTML === carta2.innerHTML) {
+                cartasVolteadas = [];
+                parejasEncontradas++;
+
+                // Si se encontraron todas las parejas, detener el temporizador
+                if (parejasEncontradas === cartasValores.length / 2) {
+                    detenerTemporizador();
+                    alert(`¡Completado! Tiempo: ${tiempo}s | Intentos: ${intentos}`);
+                }
+            } else {
+                cartasBloqueadas = true;
+                setTimeout(() => {
+                    carta1.classList.remove('volteada');
+                    carta2.classList.remove('volteada');
+                    cartasVolteadas = [];
+                    cartasBloqueadas = false;
+                }, 1000);
+            }
+        }
+
+        // Función para reiniciar el juego
+        function reiniciarJuego() {
+            detenerTemporizador(); // Detener el temporizador
+            tiempo = 0;
+            intentos = 0;
+            parejasEncontradas = 0;
+            cartasVolteadas = [];
+            cartasBloqueadas = false;
+            tiempoSpan.textContent = tiempo;
+            intentosSpan.textContent = intentos;
+            crearCartas(); // Crear nuevas cartas
+        }
+
+        // Inicializar el tablero con las cartas
+        crearCartas();
+
+        // Agregar evento al botón de reiniciar
+        reiniciarBtn.addEventListener('click', reiniciarJuego);
+    </script>
+
+</body>
+
+</html>

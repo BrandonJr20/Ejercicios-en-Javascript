@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validación de campos complejos</title>
+    <style>
+        body {
+            font-size: 3rem;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        fieldset {
+            display: flex;
+            flex-direction: column;
+        }
+
+        input {
+            padding: 20px;
+            font-size: 3rem;
+            border-radius: 50px;
+        }
+
+        input[type="submit"] {
+            color: white;
+            background-color: #8e9102;
+            font-size: 2rem;
+            padding: 10px;
+            font-weight: 100;
+        }
+
+        input[type="submit"]:hover {
+            transform: scale(1.02);
+        }
+    </style>
+</head>
+
+<body>
+
+    <form action="" method="post" id="formulario">
+        <fieldset>
+            <legend>Ingresa tus datos personales</legend>
+            <label for="">Ingresa tu nombre: </label>
+            <input type="text" id="nombre">
+            <p id="errorNombre" style="color: red;"></p>
+
+            <label for="email">Ingresa tu email</label>
+            <input type="email" id="email">
+            <p id="errorEmail" style="color: red;"></p>
+
+            <label for="contrasena">Ingresa tu contraseña</label>
+            <input type="password" id="contrasena">
+            <p id="errorContrasena" style="color: red;"></p>
+
+            <input type="submit" value="Registrar">
+        </fieldset>
+    </form>
+
+    <script>
+        // Validación de nombre
+        const nombreInput = document.getElementById("nombre");
+        const errorNombreInput = document.getElementById('errorNombre');
+
+        function validarNombre() {
+            if (nombreInput.value === "") {
+                errorNombreInput.textContent = "Campo obligatorio";
+            } else if (nombreInput.value.length < 3) {
+                errorNombreInput.textContent = "El nombre debe tener al menos tres letras";
+            } else {
+                errorNombreInput.textContent = "";
+            }
+        }
+
+        // Evento 'keyup' para validar mientras se escribe y 'blur' para validar al salir del campo
+        nombreInput.addEventListener("keyup", validarNombre);
+        nombreInput.addEventListener("blur", validarNombre);
+
+        // Validación de correo electrónico
+        const correoInput = document.getElementById('email');
+        const errorCorreoInput = document.getElementById('errorEmail');
+
+        function validarCorreo() {
+            const regexCorreo = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (correoInput.value === '') {
+                errorCorreoInput.textContent = 'Campo obligatorio';
+            } else if (!regexCorreo.test(correoInput.value)) {
+                errorCorreoInput.textContent = 'El correo electrónico debe cumplir con el patrón: ejemplo@gmail.com';
+            } else {
+                errorCorreoInput.textContent = '';
+            }
+        }
+
+        // Evento 'keyup' para validaciones en tiempo real y 'blur' para al perder el foco
+        correoInput.addEventListener("keyup", validarCorreo);
+        correoInput.addEventListener("blur", validarCorreo);
+
+        // Validación de contraseña
+        const contrasenaInput = document.getElementById('contrasena');
+        const errorContrasenaInput = document.getElementById('errorContrasena');
+
+        function validarContrasena() {
+            if (contrasenaInput.value === '') {
+                errorContrasenaInput.textContent = 'Campo obligatorio';
+                event.preventDefault();
+            } else if (contrasenaInput.value.length < 8) {
+                errorContrasenaInput.textContent = 'La contraseña debe contener al menos 8 caracteres';
+                event.preventDefault();
+            } else if (!/[a-z]/.test(contrasenaInput.value)) {
+                errorContrasenaInput.textContent = 'La contraseña debe contener al menos una minúscula';
+                event.preventDefault();
+            } else if (!/[A-Z]/.test(contrasenaInput.value)) {
+                errorContrasenaInput.textContent = 'La contraseña debe contener al menos una mayúscula';
+                event.preventDefault();
+            } else if (!/[0-9]/.test(contrasenaInput.value)) {
+                errorContrasenaInput.textContent = 'La contraseña debe contener al menos un numero';
+                event.preventDefault();
+            } else if (/[!@#$%^&*(),.?":{}|<>]/.test(contrasenaInput)) {
+                errorContrasenaInput.textContent = "Debe tener al menos un carácter especial";
+                event.preventDefault();
+            }
+            else {
+                errorContrasenaInput.textContent = '';
+            }
+        }
+
+        // Eventos 'keyup' para en tiempo real y 'blur' para validar al salir del campo
+        contrasenaInput.addEventListener("keyup", validarContrasena);
+        contrasenaInput.addEventListener("blur", validarContrasena);
+
+        // Validación final al enviar el formulario
+        document.getElementById("formulario").addEventListener("submit", function (event) {
+            validarNombre();
+            validarCorreo();
+            validarContrasena();
+
+            // Previene el envío si hay errores
+            if (errorNombreInput.textContent || errorCorreoInput.textContent || errorContrasenaInput.textContent) {
+                event.preventDefault();
+            }
+        });
+    </script>
+
+</body>
+
+</html>
