@@ -1,0 +1,112 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background: linear-gradient(to bottom, #4412ff, #441280, #441260);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100%;
+}
+
+.container {
+    width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.container h1 {
+    background: -webkit-linear-gradient(#4412ff, #441280, #441260);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: 60px;
+    font-weight: bold
+}
+
+#word {
+    font-size: 2rem;
+    letter-spacing: 0.5rem;
+    margin-bottom: 20px;
+}
+
+.guess {
+    font-size: 1.5rem;
+    margin: 10px;
+    width: 50%;
+    text-align: center;
+    background-color: white;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+#hangman {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    height: 200px;
+    position: relative;
+}
+
+.body-part {
+    display: none;
+    position: absolute;
+}
+
+#head {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 5px solid black;
+    top: 0;
+}
+
+#body {
+    width: 5px;
+    height: 80px;
+    background-color: black;
+    top: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+#left-arm {
+    width: 50px;
+    height: 5px;
+    background-color: black;
+    top: 70px;
+    left: 0;
+}
+
+#right-arm {
+    width: 50px;
+    height: 5px;
+    background-color: black;
+    top: 70px;
+    right: 0;
+}
+
+#left-leg {
+    width: 50px;
+    height: 5px;
+    background-color: black;
+    top: 130px;
+    left: 0;
+}
+
+#right-leg {
+    width: 50px;
+    height: 5px;
+    background-color: black;
+    top: 130px;
+    right: 0;
+}
+
+#message {
+    margin-top: 20px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: red;
+}

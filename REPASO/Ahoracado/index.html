@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Juego de Ahorcado</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Juego de Ahorcado</h1>
+        <p>Intenta adivinar la palabra:</p>
+        <div id="word"></div>
+        <div id="message"></div>
+        <input type="text" class="guess" id="guess" maxlength="1" placeholder="Ingresa una letra" autofocus>
+        <button onclick="checkLetter()" class="guess">Adivinar</button>
+        <div id="letters-used">Letras usadas: </div>
+
+        <div id="hangman">
+            <!-- Aquí se dibujarán las partes del cuerpo -->
+            <div class="body-part" id="head"></div>
+            <div class="body-part" id="body"></div>
+            <div class="body-part" id="left-arm"></div>
+            <div class="body-part" id="right-arm"></div>
+            <div class="body-part" id="left-leg"></div>
+            <div class="body-part" id="right-leg"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
